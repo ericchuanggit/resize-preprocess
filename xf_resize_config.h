@@ -23,8 +23,6 @@
 #include "xf_config_params.h"
 #include "imgproc/xf_resize.hpp"
 
-#include "dnn/xf_preprocess.hpp"
-
 /* Interface types*/
 #if RO
 
@@ -51,7 +49,6 @@
 
 void resize_accel(ap_uint<INPUT_PTR_WIDTH>* img_inp,
                   ap_uint<OUTPUT_PTR_WIDTH>* img_out,
-                  float params[2 * XF_CHANNELS(TYPE, NPC_T)],
                   int rows_in,
                   int cols_in,
                   int rows_out,
