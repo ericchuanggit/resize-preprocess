@@ -20,8 +20,11 @@
 #include "hls_stream.h"
 #include "ap_int.h"
 #include "common/xf_common.hpp"
-#include "xf_config_params.h"
 #include "imgproc/xf_resize.hpp"
+#include "common/xf_utility.hpp"
+#include "dnn/xf_preprocess.hpp"
+#include "xf_config_params.h"
+
 
 /* Interface types*/
 #if RO
@@ -35,6 +38,8 @@
 #else
 #define NPC_T XF_NPPC1
 #endif
+
+#define NPC NPC_T
 
 #if RGB
 #define TYPE XF_8UC3
@@ -52,6 +57,7 @@ void resize_accel(ap_uint<INPUT_PTR_WIDTH>* img_inp,
                   int rows_in,
                   int cols_in,
                   int rows_out,
-                  int cols_out);
+                  int cols_out,
+                  float params[2 * XF_CHANNELS(TYPE, NPC_T)]);
 
 #endif

@@ -45,3 +45,13 @@
 #define NEWHEIGHT 720 // Maximum output image height
 #define XF_CV_DEPTH_IN 3
 #define XF_CV_DEPTH_OUT 3
+
+// preprocess kernel params out = (in - a) * b
+// a, b and out are fixed point values and below params are used to configure
+// the width and integer bits
+#define WIDTH_A 8
+#define IBITS_A 8
+#define WIDTH_B 8
+#define IBITS_B 4 // so B is 8-bit wide and 4-bits are integer bits
+#define WIDTH_OUT 8
+#define IBITS_OUT 8

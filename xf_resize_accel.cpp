@@ -18,17 +18,19 @@
 
 static constexpr int __XF_DEPTH = (HEIGHT * WIDTH * (XF_PIXELWIDTH(TYPE, NPC_T)) / 8) / (INPUT_PTR_WIDTH / 8);
 static constexpr int __XF_DEPTH_OUT =
-    (NEWHEIGHT * NEWWIDTH * (XF_PIXELWIDTH(TYPE, NPC_T)) / 8) / (OUTPUT_PTR_WIDTH / 8);
+    (HEIGHT * WIDTH * (XF_PIXELWIDTH(TYPE, NPC_T)) / 8) / (OUTPUT_PTR_WIDTH / 8);
 
 void resize_accel(ap_uint<INPUT_PTR_WIDTH>* img_inp,
                   ap_uint<OUTPUT_PTR_WIDTH>* img_out,
                   int rows_in,
                   int cols_in,
                   int rows_out,
-                  int cols_out) {
+                  int cols_out,
+                  float params[2 * XF_CHANNELS(TYPE, NPC_T)]) {
 // clang-format off
     #pragma HLS INTERFACE m_axi     port=img_inp  offset=slave bundle=gmem1 depth=__XF_DEPTH
     #pragma HLS INTERFACE m_axi     port=img_out  offset=slave bundle=gmem2 depth=__XF_DEPTH_OUT
+    #pragma HLS INTERFACE m_axi     port=params   offset=slave bundle=gmem3 depth
     #pragma HLS INTERFACE s_axilite port=rows_in              
     #pragma HLS INTERFACE s_axilite port=cols_in              
     #pragma HLS INTERFACE s_axilite port=rows_out              
@@ -38,7 +40,9 @@ void resize_accel(ap_uint<INPUT_PTR_WIDTH>* img_inp,
 
     xf::cv::Mat<TYPE, HEIGHT, WIDTH, NPC_T, XF_CV_DEPTH_IN> in_mat(rows_in, cols_in);
 
-    xf::cv::Mat<TYPE, NEWHEIGHT, NEWWIDTH, NPC_T, XF_CV_DEPTH_OUT> out_mat(rows_out, cols_out);
+    xf::cv::Mat<TYPE, NEWHEIGHT, NEWWIDTH, NPC_T, XF_CV_DEPTH_OUT> resize_out_mat(rows_out, cols_out);
+
+    xf::cv::Mat<TYPE, NEWHEIGHT, NEWWIDTH, NPC_T, XF_CV_DEPTH_OUT> out_mat(rows_in, cols_in);
 
 // clang-format off
     #pragma HLS DATAFLOW
@@ -46,6 +50,8 @@ void resize_accel(ap_uint<INPUT_PTR_WIDTH>* img_inp,
 
     xf::cv::Array2xfMat<INPUT_PTR_WIDTH, TYPE, HEIGHT, WIDTH, NPC_T, XF_CV_DEPTH_IN>(img_inp, in_mat);
     xf::cv::resize<INTERPOLATION, TYPE, HEIGHT, WIDTH, NEWHEIGHT, NEWWIDTH, NPC_T, XF_CV_DEPTH_IN, XF_CV_DEPTH_OUT,
-                   MAXDOWNSCALE>(in_mat, out_mat);
-    xf::cv::xfMat2Array<OUTPUT_PTR_WIDTH, TYPE, NEWHEIGHT, NEWWIDTH, NPC_T, XF_CV_DEPTH_IN>(out_mat, img_out);
+                   MAXDOWNSCALE>(in_mat, resize_out_mat);
+    xf::cv::preProcess<TYPE, TYPE, NEWHEIGHT, NEWWIDTH, NPC_T, XF_CV_DEPTH_IN, XF_CV_DEPTH_OUT, WIDTH_A, IBITS_A, WIDTH_B, IBITS_B, WIDTH_OUT,
+                       IBITS_OUT>(resize_out_mat, out_mat, params);
+    xf::cv::xfMat2Array<OUTPUT_PTR_WIDTH, TYPE, NEWHEIGHT, NEWWIDTH, NPC_T, XF_CV_DEPTH_OUT>(out_mat, img_out);
 }
