@@ -16,12 +16,6 @@
 
 #include "xf_resize_config.h"
 
-static constexpr int WIDTH_A = 8;
-static constexpr int IBITS_A = 8;
-static constexpr int WIDTH_B = 8;
-static constexpr int IBITS_B = 4; // so B is 8-bit wide and 4-bits are integer bits
-static constexpr int WIDTH_OUT = 8;
-static constexpr int IBITS_OUT = 8;
 
 static constexpr int __XF_DEPTH = (HEIGHT * WIDTH * (XF_PIXELWIDTH(TYPE, NPC_T)) / 8) / (INPUT_PTR_WIDTH / 8);
 static constexpr int __XF_DEPTH_OUT =
@@ -55,7 +49,7 @@ void resize_accel(ap_uint<INPUT_PTR_WIDTH>* img_inp,
     xf::cv::Array2xfMat<INPUT_PTR_WIDTH, TYPE, HEIGHT, WIDTH, NPC_T, XF_CV_DEPTH_IN>(img_inp, in_mat);
     xf::cv::resize<INTERPOLATION, TYPE, HEIGHT, WIDTH, NEWHEIGHT, NEWWIDTH, NPC_T, XF_CV_DEPTH_IN, XF_CV_DEPTH_OUT,
                    MAXDOWNSCALE>(in_mat, resize_out_mat);
-    xf::cv::preProcess<TYPE, TYPE, NEWHEIGHT, NEWWIDTH, NPC_T, WIDTH_A, IBITS_A, WIDTH_B, IBITS_B, WIDTH_OUT,
-                       IBITS_OUT>(resize_out_mat, out_mat, params);
-    xf::cv::xfMat2Array<OUTPUT_PTR_WIDTH, TYPE, NEWHEIGHT, NEWWIDTH, NPC_T, XF_CV_DEPTH_IN>(out_mat, img_out);
+    xf::cv::preProcess<TYPE, XF_32FC1, NEWHEIGHT, NEWWIDTH, NPC_T, WIDTH_A, IBITS_A, WIDTH_B, IBITS_B, WIDTH_OUT,
+                       IBITS_OUT>(resize_out_mat, in_mat, params);
+    xf::cv::xfMat2Array<OUTPUT_PTR_WIDTH, TYPE, NEWHEIGHT, NEWWIDTH, NPC_T, XF_CV_DEPTH_IN>(in_mat, img_out);
 }

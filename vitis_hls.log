@@ -6,13 +6,12 @@
 
 source /tools/Xilinx/Vitis_HLS/2022.1/scripts/vitis_hls/hls.tcl -notrace
 INFO: [HLS 200-10] Running '/tools/Xilinx/Vitis_HLS/2022.1/bin/unwrapped/lnx64.o/vitis_hls'
-INFO: [HLS 200-10] For user 'root' on host 'eric-System-Product-Name' (Linux_x86_64 version 5.4.0-150-generic) on Wed Aug 23 18:05:10 CST 2023
+INFO: [HLS 200-10] For user 'root' on host 'eric-System-Product-Name' (Linux_x86_64 version 5.4.0-150-generic) on Thu Aug 24 08:56:59 CST 2023
 INFO: [HLS 200-10] On os Ubuntu 18.04.6 LTS
 INFO: [HLS 200-10] In directory '/home/eric/resize_preprocess'
 Sourcing Tcl script 'run_hls.tcl'
 INFO: [HLS 200-1510] Running: open_project -reset resize.prj 
-INFO: [HLS 200-10] Opening and resetting project '/home/eric/resize_preprocess/resize.prj'.
-WARNING: [HLS 200-40] No /home/eric/resize_preprocess/resize.prj/sol1/sol1.aps file found.
+INFO: [HLS 200-10] Creating and opening project '/home/eric/resize_preprocess/resize.prj'.
 INFO: [HLS 200-1510] Running: add_files ./xf_resize_accel.cpp -cflags  -I ./build -I/home/eric/Vitis_Libraries/vision/L1/include -I ./ -D__SDSVHLS__ -std=c++0x -csimflags  -I $./build -I/home/eric/Vitis_Libraries/vision/L1/include -I ./ -D__SDSVHLS__ -std=c++0x 
 INFO: [HLS 200-10] Adding design file './xf_resize_accel.cpp' to the project
 INFO: [HLS 200-1510] Running: add_files -tb ./xf_resize_tb.cpp -cflags  -I ./build -I/usr/local/include/opencv4 -I/home/eric/Vitis_Libraries/vision/L1/include -I ./ -D__SDSVHLS__ -std=c++0x -csimflags  -I $./build -I/home/eric/Vitis_Libraries/vision/L1/include -I ./ -D__SDSVHLS__ -std=c++0x 
@@ -34,7 +33,8 @@ INFO: [SIM 211-2] *************** CSIM start ***************
 INFO: [SIM 211-4] CSIM will launch GCC as the compiler.
 make[1]: Entering directory '/home/eric/resize_preprocess/resize.prj/sol1/csim/build'
    Compiling ../../../../xf_resize_tb.cpp in debug mode
-csim.mk:74: recipe for target 'obj/xf_resize_tb.o' failed
+   Compiling ../../../../xf_resize_accel.cpp in debug mode
+csim.mk:80: recipe for target 'obj/xf_resize_accel.o' failed
 make[1]: Leaving directory '/home/eric/resize_preprocess/resize.prj/sol1/csim/build'
 In file included from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_structs.hpp:27,
                  from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_common.hpp:20,
@@ -59,342 +59,59 @@ In file included from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_str
 /tools/Xilinx/Vitis_HLS/2022.1/include/ap_axi_sdata.h:107:23: warning: variable templates only available with -std=c++14 or -std=gnu++14
  constexpr std::size_t bytewidth = (bitwidth<T> + CHAR_BIT - 1) / CHAR_BIT;
                        ^~~~~~~~~
-In file included from ../../../../xf_resize_config.h:23,
-                 from ../../../../xf_resize_tb.cpp:18:
-../../../../build/xf_config_params.h:38:16: error: expected ‘>’ before numeric constant
- #define HEIGHT 1080 // Maximum Input image height
-                ^~~~
-../../../../build/xf_config_params.h:38:16: note: in definition of macro ‘HEIGHT’
- #define HEIGHT 1080 // Maximum Input image height
-                ^~~~
-In file included from ../../../../xf_resize_config.h:26,
-                 from ../../../../xf_resize_tb.cpp:18:
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:43:61: error: ‘NPC’ was not declared in this scope
- void xFpreProcessKernel(xf::cv::Mat<IN_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_IN>& in_mat,
-                                                             ^~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:43:61: note: suggested alternative: ‘NPC_T’
- void xFpreProcessKernel(xf::cv::Mat<IN_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_IN>& in_mat,
-                                                             ^~~
-                                                             NPC_T
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:43:66: error: ‘XFCVDEPTH_IN’ was not declared in this scope
- void xFpreProcessKernel(xf::cv::Mat<IN_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_IN>& in_mat,
-                                                                  ^~~~~~~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:43:66: note: suggested alternative: ‘XF_CV_DEPTH_IN’
- void xFpreProcessKernel(xf::cv::Mat<IN_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_IN>& in_mat,
-                                                                  ^~~~~~~~~~~~
-                                                                  XF_CV_DEPTH_IN
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:43:78: error: template argument 4 is invalid
- void xFpreProcessKernel(xf::cv::Mat<IN_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_IN>& in_mat,
-                                                                              ^
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:43:78: error: template argument 5 is invalid
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:44:62: error: ‘NPC’ was not declared in this scope
-                         xf::cv::Mat<OUT_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_OUT>& out_mat,
-                                                              ^~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:44:62: note: suggested alternative: ‘NPC_T’
-                         xf::cv::Mat<OUT_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_OUT>& out_mat,
-                                                              ^~~
-                                                              NPC_T
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:44:67: error: ‘XFCVDEPTH_OUT’ was not declared in this scope
-                         xf::cv::Mat<OUT_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_OUT>& out_mat,
-                                                                   ^~~~~~~~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:44:67: note: suggested alternative: ‘XF_CV_DEPTH_OUT’
-                         xf::cv::Mat<OUT_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_OUT>& out_mat,
-                                                                   ^~~~~~~~~~~~~
-                                                                   XF_CV_DEPTH_OUT
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:44:80: error: template argument 4 is invalid
-                         xf::cv::Mat<OUT_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_OUT>& out_mat,
-                                                                                ^
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:44:80: error: template argument 5 is invalid
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:45:35: error: ‘WIDTH_A’ was not declared in this scope
-                         ap_ufixed<WIDTH_A, IBITS_A, AP_RND> alpha_reg[XF_CHANNELS(IN_TYPE, NPC)],
-                                   ^~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:45:35: note: suggested alternative: ‘WIDTH’
-                         ap_ufixed<WIDTH_A, IBITS_A, AP_RND> alpha_reg[XF_CHANNELS(IN_TYPE, NPC)],
-                                   ^~~~~~~
-                                   WIDTH
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:45:44: error: ‘IBITS_A’ was not declared in this scope
-                         ap_ufixed<WIDTH_A, IBITS_A, AP_RND> alpha_reg[XF_CHANNELS(IN_TYPE, NPC)],
-                                            ^~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:45:59: error: template argument 1 is invalid
-                         ap_ufixed<WIDTH_A, IBITS_A, AP_RND> alpha_reg[XF_CHANNELS(IN_TYPE, NPC)],
-                                                           ^
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:45:59: error: template argument 2 is invalid
-In file included from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_structs.hpp:29,
+In file included from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_structs.hpp:27,
                  from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_common.hpp:20,
-                 from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_sw_utils.hpp:20,
-                 from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_headers.hpp:28,
-                 from ../../../../xf_resize_tb.cpp:17:
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:45:92: error: ‘NPC’ was not declared in this scope
-                         ap_ufixed<WIDTH_A, IBITS_A, AP_RND> alpha_reg[XF_CHANNELS(IN_TYPE, NPC)],
-                                                                                            ^~~
-/home/eric/Vitis_Libraries/vision/L1/include/common/xf_types.hpp:1682:49: note: in definition of macro ‘XF_CHANNELS’
- #define XF_CHANNELS(flags, npc) DataType<flags, npc>::channel
-                                                 ^~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:45:92: note: suggested alternative: ‘NPC_T’
-                         ap_ufixed<WIDTH_A, IBITS_A, AP_RND> alpha_reg[XF_CHANNELS(IN_TYPE, NPC)],
-                                                                                            ^~~
-/home/eric/Vitis_Libraries/vision/L1/include/common/xf_types.hpp:1682:49: note: in definition of macro ‘XF_CHANNELS’
- #define XF_CHANNELS(flags, npc) DataType<flags, npc>::channel
-                                                 ^~~
-/home/eric/Vitis_Libraries/vision/L1/include/common/xf_types.hpp:1682:52: error: template argument 2 is invalid
- #define XF_CHANNELS(flags, npc) DataType<flags, npc>::channel
-                                                    ^
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:45:71: note: in expansion of macro ‘XF_CHANNELS’
-                         ap_ufixed<WIDTH_A, IBITS_A, AP_RND> alpha_reg[XF_CHANNELS(IN_TYPE, NPC)],
-                                                                       ^~~~~~~~~~~
+                 from ../../../../xf_resize_config.h:22,
+                 from ../../../../xf_resize_accel.cpp:17:
+/tools/Xilinx/Vitis_HLS/2022.1/include/ap_axi_sdata.h:97:45: warning: variable templates only available with -std=c++14 or -std=gnu++14
+ template <typename T> constexpr std::size_t bitwidth = sizeof(T) * CHAR_BIT;
+                                             ^~~~~~~~
+/tools/Xilinx/Vitis_HLS/2022.1/include/ap_axi_sdata.h:99:48: warning: variable templates only available with -std=c++14 or -std=gnu++14
+ template <std::size_t W> constexpr std::size_t bitwidth<ap_int<W>> = W;
+                                                ^~~~~~~~~~~~~~~~~~~
+/tools/Xilinx/Vitis_HLS/2022.1/include/ap_axi_sdata.h:100:48: warning: variable templates only available with -std=c++14 or -std=gnu++14
+ template <std::size_t W> constexpr std::size_t bitwidth<ap_uint<W>> = W;
+                                                ^~~~~~~~~~~~~~~~~~~~
+/tools/Xilinx/Vitis_HLS/2022.1/include/ap_axi_sdata.h:102:23: warning: variable templates only available with -std=c++14 or -std=gnu++14
+ constexpr std::size_t bitwidth<ap_fixed<_AP_W, _AP_I, _AP_Q, _AP_O, _AP_N>> = _AP_W;
+                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/tools/Xilinx/Vitis_HLS/2022.1/include/ap_axi_sdata.h:104:23: warning: variable templates only available with -std=c++14 or -std=gnu++14
+ constexpr std::size_t bitwidth<ap_ufixed<_AP_W, _AP_I, _AP_Q, _AP_O, _AP_N>> = _AP_W;
+                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/tools/Xilinx/Vitis_HLS/2022.1/include/ap_axi_sdata.h:107:23: warning: variable templates only available with -std=c++14 or -std=gnu++14
+ constexpr std::size_t bytewidth = (bitwidth<T> + CHAR_BIT - 1) / CHAR_BIT;
+                       ^~~~~~~~~
+../../../../xf_resize_accel.cpp: In function ‘void resize_accel(ap_uint<128>*, ap_uint<128>*, float*, int, int, int, int)’:
+../../../../xf_resize_accel.cpp:53:65: error: no matching function for call to ‘preProcess<XF_8UC3, XF_32FC1, 720, 720, XF_NPPC1, WIDTH_A, IBITS_A, WIDTH_B, IBITS_B, WIDTH_OUT, IBITS_OUT>(xf::cv::Mat<9, 720, 720, 1, 3>&, xf::cv::Mat<9, 1080, 1920, 1, 3>&, float*&)’
+                        IBITS_OUT>(resize_out_mat, in_mat, params);
+                                                                 ^
 In file included from ../../../../xf_resize_config.h:26,
-                 from ../../../../xf_resize_tb.cpp:18:
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:45:97: error: expected ‘)’ before ‘,’ token
-                         ap_ufixed<WIDTH_A, IBITS_A, AP_RND> alpha_reg[XF_CHANNELS(IN_TYPE, NPC)],
-                                                                                                 ^
-                                                                                                 )
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:43:24: note: to match this ‘(’
- void xFpreProcessKernel(xf::cv::Mat<IN_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_IN>& in_mat,
-                        ^
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:45:97: error: expected ‘;’ before ‘,’ token
-                         ap_ufixed<WIDTH_A, IBITS_A, AP_RND> alpha_reg[XF_CHANNELS(IN_TYPE, NPC)],
-                                                                                                 ^
-                                                                                                 ;
-In file included from ../../../../xf_resize_config.h:23,
-                 from ../../../../xf_resize_tb.cpp:18:
-../../../../build/xf_config_params.h:38:16: error: expected ‘>’ before numeric constant
- #define HEIGHT 1080 // Maximum Input image height
-                ^~~~
-../../../../build/xf_config_params.h:38:16: note: in definition of macro ‘HEIGHT’
- #define HEIGHT 1080 // Maximum Input image height
-                ^~~~
-In file included from ../../../../xf_resize_config.h:26,
-                 from ../../../../xf_resize_tb.cpp:18:
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:105:53: error: ‘NPC’ was not declared in this scope
+                 from ../../../../xf_resize_accel.cpp:17:
+/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:105:6: note: candidate: ‘template<int IN_TYPE, int OUT_TYPE, int HEIGHT, int WIDTH, int NPC, int XFCVDEPTH_IN, int XFCVDEPTH_OUT, int WIDTH_A, int IBITS_A, int WIDTH_B, int IBITS_B, int WIDTH_OUT, int IBITS_OUT> void xf::cv::preProcess(xf::cv::Mat<IN_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_IN>&, xf::cv::Mat<T, ROWS, COLS, NPC, XFCVDEPTH>&, float*)’
  void preProcess(xf::cv::Mat<IN_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_IN>& in_mat,
-                                                     ^~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:105:53: note: suggested alternative: ‘NPC_T’
- void preProcess(xf::cv::Mat<IN_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_IN>& in_mat,
-                                                     ^~~
-                                                     NPC_T
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:105:58: error: ‘XFCVDEPTH_IN’ was not declared in this scope
- void preProcess(xf::cv::Mat<IN_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_IN>& in_mat,
-                                                          ^~~~~~~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:105:58: note: suggested alternative: ‘XF_CV_DEPTH_IN’
- void preProcess(xf::cv::Mat<IN_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_IN>& in_mat,
-                                                          ^~~~~~~~~~~~
-                                                          XF_CV_DEPTH_IN
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:105:70: error: template argument 4 is invalid
- void preProcess(xf::cv::Mat<IN_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_IN>& in_mat,
-                                                                      ^
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:105:70: error: template argument 5 is invalid
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:106:54: error: ‘NPC’ was not declared in this scope
-                 xf::cv::Mat<OUT_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_OUT>& out_mat,
-                                                      ^~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:106:54: note: suggested alternative: ‘NPC_T’
-                 xf::cv::Mat<OUT_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_OUT>& out_mat,
-                                                      ^~~
-                                                      NPC_T
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:106:59: error: ‘XFCVDEPTH_OUT’ was not declared in this scope
-                 xf::cv::Mat<OUT_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_OUT>& out_mat,
-                                                           ^~~~~~~~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:106:59: note: suggested alternative: ‘XF_CV_DEPTH_OUT’
-                 xf::cv::Mat<OUT_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_OUT>& out_mat,
-                                                           ^~~~~~~~~~~~~
-                                                           XF_CV_DEPTH_OUT
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:106:72: error: template argument 4 is invalid
-                 xf::cv::Mat<OUT_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_OUT>& out_mat,
-                                                                        ^
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:106:72: error: template argument 5 is invalid
-In file included from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_structs.hpp:29,
-                 from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_common.hpp:20,
-                 from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_sw_utils.hpp:20,
-                 from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_headers.hpp:28,
-                 from ../../../../xf_resize_tb.cpp:17:
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:107:55: error: ‘NPC’ was not declared in this scope
-                 float params[2 * XF_CHANNELS(IN_TYPE, NPC)]) {
-                                                       ^~~
-/home/eric/Vitis_Libraries/vision/L1/include/common/xf_types.hpp:1682:49: note: in definition of macro ‘XF_CHANNELS’
- #define XF_CHANNELS(flags, npc) DataType<flags, npc>::channel
-                                                 ^~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:107:55: note: suggested alternative: ‘NPC_T’
-                 float params[2 * XF_CHANNELS(IN_TYPE, NPC)]) {
-                                                       ^~~
-/home/eric/Vitis_Libraries/vision/L1/include/common/xf_types.hpp:1682:49: note: in definition of macro ‘XF_CHANNELS’
- #define XF_CHANNELS(flags, npc) DataType<flags, npc>::channel
-                                                 ^~~
-/home/eric/Vitis_Libraries/vision/L1/include/common/xf_types.hpp:1682:52: error: template argument 2 is invalid
- #define XF_CHANNELS(flags, npc) DataType<flags, npc>::channel
-                                                    ^
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:107:34: note: in expansion of macro ‘XF_CHANNELS’
-                 float params[2 * XF_CHANNELS(IN_TYPE, NPC)]) {
-                                  ^~~~~~~~~~~
-In file included from ../../../../xf_resize_config.h:26,
-                 from ../../../../xf_resize_tb.cpp:18:
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp: In function ‘void xf::cv::preProcess(...)’:
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:110:15: error: ‘WIDTH_A’ was not declared in this scope
-     ap_ufixed<WIDTH_A, IBITS_A, AP_RND> alpha_reg[XF_CHANNELS(IN_TYPE, NPC)];
-               ^~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:110:15: note: suggested alternative: ‘WIDTH’
-     ap_ufixed<WIDTH_A, IBITS_A, AP_RND> alpha_reg[XF_CHANNELS(IN_TYPE, NPC)];
-               ^~~~~~~
-               WIDTH
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:110:24: error: ‘IBITS_A’ was not declared in this scope
-     ap_ufixed<WIDTH_A, IBITS_A, AP_RND> alpha_reg[XF_CHANNELS(IN_TYPE, NPC)];
-                        ^~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:110:39: error: template argument 1 is invalid
-     ap_ufixed<WIDTH_A, IBITS_A, AP_RND> alpha_reg[XF_CHANNELS(IN_TYPE, NPC)];
-                                       ^
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:110:39: error: template argument 2 is invalid
-In file included from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_structs.hpp:29,
-                 from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_common.hpp:20,
-                 from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_sw_utils.hpp:20,
-                 from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_headers.hpp:28,
-                 from ../../../../xf_resize_tb.cpp:17:
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:110:72: error: ‘NPC’ was not declared in this scope
-     ap_ufixed<WIDTH_A, IBITS_A, AP_RND> alpha_reg[XF_CHANNELS(IN_TYPE, NPC)];
-                                                                        ^~~
-/home/eric/Vitis_Libraries/vision/L1/include/common/xf_types.hpp:1682:49: note: in definition of macro ‘XF_CHANNELS’
- #define XF_CHANNELS(flags, npc) DataType<flags, npc>::channel
-                                                 ^~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:110:72: note: suggested alternative: ‘NPC_T’
-     ap_ufixed<WIDTH_A, IBITS_A, AP_RND> alpha_reg[XF_CHANNELS(IN_TYPE, NPC)];
-                                                                        ^~~
-/home/eric/Vitis_Libraries/vision/L1/include/common/xf_types.hpp:1682:49: note: in definition of macro ‘XF_CHANNELS’
- #define XF_CHANNELS(flags, npc) DataType<flags, npc>::channel
-                                                 ^~~
-/home/eric/Vitis_Libraries/vision/L1/include/common/xf_types.hpp:1682:52: error: template argument 2 is invalid
- #define XF_CHANNELS(flags, npc) DataType<flags, npc>::channel
-                                                    ^
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:110:51: note: in expansion of macro ‘XF_CHANNELS’
-     ap_ufixed<WIDTH_A, IBITS_A, AP_RND> alpha_reg[XF_CHANNELS(IN_TYPE, NPC)];
-                                                   ^~~~~~~~~~~
-In file included from ../../../../xf_resize_config.h:26,
-                 from ../../../../xf_resize_tb.cpp:18:
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:111:14: error: ‘WIDTH_B’ was not declared in this scope
-     ap_fixed<WIDTH_B, IBITS_B, AP_RND> beta_reg[XF_CHANNELS(IN_TYPE, NPC)];
-              ^~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:111:14: note: suggested alternative: ‘WIDTH’
-     ap_fixed<WIDTH_B, IBITS_B, AP_RND> beta_reg[XF_CHANNELS(IN_TYPE, NPC)];
-              ^~~~~~~
-              WIDTH
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:111:23: error: ‘IBITS_B’ was not declared in this scope
-     ap_fixed<WIDTH_B, IBITS_B, AP_RND> beta_reg[XF_CHANNELS(IN_TYPE, NPC)];
-                       ^~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:111:38: error: template argument 1 is invalid
-     ap_fixed<WIDTH_B, IBITS_B, AP_RND> beta_reg[XF_CHANNELS(IN_TYPE, NPC)];
-                                      ^
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:111:38: error: template argument 2 is invalid
-In file included from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_structs.hpp:29,
-                 from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_common.hpp:20,
-                 from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_sw_utils.hpp:20,
-                 from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_headers.hpp:28,
-                 from ../../../../xf_resize_tb.cpp:17:
-/home/eric/Vitis_Libraries/vision/L1/include/common/xf_types.hpp:1682:52: error: could not convert template argument ‘NPC’ from ‘<type error>’ to ‘int’
- #define XF_CHANNELS(flags, npc) DataType<flags, npc>::channel
-                                                    ^
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:111:49: note: in expansion of macro ‘XF_CHANNELS’
-     ap_fixed<WIDTH_B, IBITS_B, AP_RND> beta_reg[XF_CHANNELS(IN_TYPE, NPC)];
-                                                 ^~~~~~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/common/xf_types.hpp:1682:52: error: could not convert template argument ‘NPC’ from ‘<type error>’ to ‘int’
- #define XF_CHANNELS(flags, npc) DataType<flags, npc>::channel
-                                                    ^
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:118:20: note: in expansion of macro ‘XF_CHANNELS’
-     int channels = XF_CHANNELS(IN_TYPE, NPC);
-                    ^~~~~~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/common/xf_types.hpp:1682:52: error: could not convert template argument ‘NPC’ from ‘<type error>’ to ‘int’
- #define XF_CHANNELS(flags, npc) DataType<flags, npc>::channel
-                                                    ^
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:119:29: note: in expansion of macro ‘XF_CHANNELS’
-     for (int i = 0; i < 2 * XF_CHANNELS(IN_TYPE, NPC); i++) {
-                             ^~~~~~~~~~~
-In file included from ../../../../xf_resize_config.h:26,
-                 from ../../../../xf_resize_tb.cpp:18:
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:124:22: error: ‘params’ was not declared in this scope
-         float temp = params[i];
-                      ^~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:126:13: error: ‘alpha_reg’ was not declared in this scope
-             alpha_reg[i] = temp;
-             ^~~~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:128:13: error: ‘beta_reg’ was not declared in this scope
-             beta_reg[i - XF_CHANNELS(IN_TYPE, NPC)] = temp;
-             ^~~~~~~~
-In file included from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_structs.hpp:29,
-                 from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_common.hpp:20,
-                 from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_sw_utils.hpp:20,
-                 from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_headers.hpp:28,
-                 from ../../../../xf_resize_tb.cpp:17:
-/home/eric/Vitis_Libraries/vision/L1/include/common/xf_types.hpp:1682:52: error: could not convert template argument ‘NPC’ from ‘<type error>’ to ‘int’
- #define XF_CHANNELS(flags, npc) DataType<flags, npc>::channel
-                                                    ^
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:128:26: note: in expansion of macro ‘XF_CHANNELS’
-             beta_reg[i - XF_CHANNELS(IN_TYPE, NPC)] = temp;
-                          ^~~~~~~~~~~
-In file included from ../../../../xf_resize_config.h:26,
-                 from ../../../../xf_resize_tb.cpp:18:
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:135:22: error: ‘in_mat’ was not declared in this scope
-     uint16_t width = in_mat.cols >> XF_BITSHIFT(NPC);
-                      ^~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:135:22: note: suggested alternative: ‘intmax_t’
-     uint16_t width = in_mat.cols >> XF_BITSHIFT(NPC);
-                      ^~~~~~
-                      intmax_t
-In file included from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_structs.hpp:29,
-                 from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_common.hpp:20,
-                 from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_sw_utils.hpp:20,
-                 from /home/eric/Vitis_Libraries/vision/L1/include/common/xf_headers.hpp:28,
-                 from ../../../../xf_resize_tb.cpp:17:
-/home/eric/Vitis_Libraries/vision/L1/include/common/xf_types.hpp:406:51: error: could not convert template argument ‘NPC’ from ‘<type error>’ to ‘int’
- #define XF_BITSHIFT(flags) xfNPixelsPerCycle<flags>::datashift
-                                                   ^
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:135:37: note: in expansion of macro ‘XF_BITSHIFT’
-     uint16_t width = in_mat.cols >> XF_BITSHIFT(NPC);
-                                     ^~~~~~~~~~~
-In file included from ../../../../xf_resize_config.h:26,
-                 from ../../../../xf_resize_tb.cpp:18:
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:140:63: error: ‘XFCVDEPTH_IN’ was not declared in this scope
-     xFpreProcessKernel<IN_TYPE, OUT_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_IN, XFCVDEPTH_OUT, WIDTH_A, IBITS_A, WIDTH_B,
-                                                               ^~~~~~~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:140:63: note: suggested alternative: ‘XF_CV_DEPTH_IN’
-     xFpreProcessKernel<IN_TYPE, OUT_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_IN, XFCVDEPTH_OUT, WIDTH_A, IBITS_A, WIDTH_B,
-                                                               ^~~~~~~~~~~~
-                                                               XF_CV_DEPTH_IN
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:140:77: error: ‘XFCVDEPTH_OUT’ was not declared in this scope
-     xFpreProcessKernel<IN_TYPE, OUT_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_IN, XFCVDEPTH_OUT, WIDTH_A, IBITS_A, WIDTH_B,
-                                                                             ^~~~~~~~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:140:77: note: suggested alternative: ‘XF_CV_DEPTH_OUT’
-     xFpreProcessKernel<IN_TYPE, OUT_TYPE, HEIGHT, WIDTH, NPC, XFCVDEPTH_IN, XFCVDEPTH_OUT, WIDTH_A, IBITS_A, WIDTH_B,
-                                                                             ^~~~~~~~~~~~~
-                                                                             XF_CV_DEPTH_OUT
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:141:33: error: ‘WIDTH_OUT’ was not declared in this scope
-                        IBITS_B, WIDTH_OUT, IBITS_OUT>(in_mat, out_mat, alpha_reg, beta_reg, loop_count);
-                                 ^~~~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:141:33: note: suggested alternative: ‘WIDTH’
-                        IBITS_B, WIDTH_OUT, IBITS_OUT>(in_mat, out_mat, alpha_reg, beta_reg, loop_count);
-                                 ^~~~~~~~~
-                                 WIDTH
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:141:44: error: ‘IBITS_OUT’ was not declared in this scope
-                        IBITS_B, WIDTH_OUT, IBITS_OUT>(in_mat, out_mat, alpha_reg, beta_reg, loop_count);
-                                            ^~~~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:141:63: error: ‘out_mat’ was not declared in this scope
-                        IBITS_B, WIDTH_OUT, IBITS_OUT>(in_mat, out_mat, alpha_reg, beta_reg, loop_count);
-                                                               ^~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:141:72: error: ‘alpha_reg’ was not declared in this scope
-                        IBITS_B, WIDTH_OUT, IBITS_OUT>(in_mat, out_mat, alpha_reg, beta_reg, loop_count);
-                                                                        ^~~~~~~~~
-/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:141:83: error: ‘beta_reg’ was not declared in this scope
-                        IBITS_B, WIDTH_OUT, IBITS_OUT>(in_mat, out_mat, alpha_reg, beta_reg, loop_count);
-                                                                                   ^~~~~~~~
-../../../../xf_resize_tb.cpp: In function ‘int main(int, char**)’:
-../../../../xf_resize_tb.cpp:74:97: error: invalid conversion from ‘short unsigned int’ to ‘float*’ [-fpermissive]
-     resize_accel((ap_uint<INPUT_PTR_WIDTH>*)img.data, (ap_uint<OUTPUT_PTR_WIDTH>*)out_img.data, in_height, in_width,
-                                                                                                 ^~~~~~~~~
-../../../../xf_resize_tb.cpp:75:39: error: too few arguments to function ‘void resize_accel(ap_uint<128>*, ap_uint<128>*, float*, int, int, int, int)’
-                  out_height, out_width);
-                                       ^
-In file included from ../../../../xf_resize_tb.cpp:18:
-../../../../xf_resize_config.h:52:6: note: declared here
- void resize_accel(ap_uint<INPUT_PTR_WIDTH>* img_inp,
-      ^~~~~~~~~~~~
-make[1]: *** [obj/xf_resize_tb.o] Error 1
+      ^~~~~~~~~~
+/home/eric/Vitis_Libraries/vision/L1/include/dnn/xf_preprocess.hpp:105:6: note:   template argument deduction/substitution failed:
+../../../../xf_resize_accel.cpp:53:65: note:   couldn't deduce template parameter ‘WIDTH_OUT’
+                        IBITS_OUT>(resize_out_mat, in_mat, params);
+                                                                 ^
+../../../../xf_resize_accel.cpp:54:108: error: no matching function for call to ‘xfMat2Array<128, XF_8UC3, 720, 720, XF_NPPC1, 3>(xf::cv::Mat<9, 1080, 1920, 1, 3>&, ap_uint<128>*&)’
+     xf::cv::xfMat2Array<OUTPUT_PTR_WIDTH, TYPE, NEWHEIGHT, NEWWIDTH, NPC_T, XF_CV_DEPTH_IN>(in_mat, img_out);
+                                                                                                            ^
+In file included from /home/eric/Vitis_Libraries/vision/L1/include/imgproc/xf_resize_headers.h:22,
+                 from /home/eric/Vitis_Libraries/vision/L1/include/imgproc/xf_resize.hpp:20,
+                 from ../../../../xf_resize_config.h:24,
+                 from ../../../../xf_resize_accel.cpp:17:
+/home/eric/Vitis_Libraries/vision/L1/include/common/xf_utility.hpp:786:6: note: candidate: ‘template<int PTR_WIDTH, int MAT_T, int ROWS, int COLS, int NPC, int XFCVDEPTH, int FILLZERO> void xf::cv::xfMat2Array(xf::cv::Mat<T, ROWS, COLS, NPC, XFCVDEPTH>&, ap_uint<_AP_W2>*, int)’
+ void xfMat2Array(xf::cv::Mat<MAT_T, ROWS, COLS, NPC, XFCVDEPTH>& srcMat, ap_uint<PTR_WIDTH>* dstPtr, int stride = -1) {
+      ^~~~~~~~~~~
+/home/eric/Vitis_Libraries/vision/L1/include/common/xf_utility.hpp:786:6: note:   template argument deduction/substitution failed:
+../../../../xf_resize_accel.cpp:54:93: note:   cannot convert ‘in_mat’ (type ‘xf::cv::Mat<9, 1080, 1920, 1, 3>’) to type ‘xf::cv::Mat<9, 720, 720, 1, 3>&’
+     xf::cv::xfMat2Array<OUTPUT_PTR_WIDTH, TYPE, NEWHEIGHT, NEWWIDTH, NPC_T, XF_CV_DEPTH_IN>(in_mat, img_out);
+                                                                                             ^~~~~~
+make[1]: *** [obj/xf_resize_accel.o] Error 1
 ERROR: [SIM 211-100] 'csim_design' failed: compilation error(s).
 INFO: [SIM 211-3] *************** CSIM finish ***************
-INFO: [HLS 200-111] Finished Command csim_design CPU user time: 4.98 seconds. CPU system time: 0.74 seconds. Elapsed time: 4.4 seconds; current allocated memory: -1033.656 MB.
+INFO: [HLS 200-111] Finished Command csim_design CPU user time: 9.51 seconds. CPU system time: 0.98 seconds. Elapsed time: 8.58 seconds; current allocated memory: -1033.656 MB.
 4
     while executing
 "source run_hls.tcl"
@@ -402,5 +119,5 @@ INFO: [HLS 200-111] Finished Command csim_design CPU user time: 4.98 seconds. CP
     invoked from within
 "uplevel \#0 [list source $arg] "
 
-INFO: [HLS 200-112] Total CPU user time: 6.23 seconds. Total CPU system time: 1.51 seconds. Total elapsed time: 6.16 seconds; peak allocated memory: 110.828 MB.
-INFO: [Common 17-206] Exiting vitis_hls at Wed Aug 23 18:05:16 2023...
+INFO: [HLS 200-112] Total CPU user time: 10.83 seconds. Total CPU system time: 1.59 seconds. Total elapsed time: 10.08 seconds; peak allocated memory: 110.809 MB.
+INFO: [Common 17-206] Exiting vitis_hls at Thu Aug 24 08:57:09 2023...

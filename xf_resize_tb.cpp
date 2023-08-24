@@ -19,6 +19,10 @@
 
 int main(int argc, char** argv) {
     cv::Mat img, out_img, result_ocv, error;
+    float params[6];
+        for(int i = 0; i < 6; i++) {
+                params[i] = 127;
+            }
 
     if (argc != 2) {
         fprintf(stderr, "Usage: <executable> <input image>\n");
@@ -71,9 +75,11 @@ int main(int argc, char** argv) {
 #endif
 
     /* Call the top function */
-    resize_accel((ap_uint<INPUT_PTR_WIDTH>*)img.data, (ap_uint<OUTPUT_PTR_WIDTH>*)out_img.data, in_height, in_width,
-                 out_height, out_width);
 
+
+    resize_accel((ap_uint<INPUT_PTR_WIDTH>*)img.data, (ap_uint<OUTPUT_PTR_WIDTH>*)out_img.data, params, in_height, in_width,
+                 out_height, out_width);
+    
     float err_per;
     cv::absdiff(result_ocv, out_img, error);
     xf::cv::analyzeDiff(error, 5, err_per);

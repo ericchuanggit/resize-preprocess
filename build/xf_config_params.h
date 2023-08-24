@@ -33,12 +33,11 @@
 // 1 - Bilinear Interpolation
 // 2 - AREA Interpolation
 
-/* Input image Dimensions */
-#define WIDTH 1920  // Maximum Input image width
-#define HEIGHT 1080 // Maximum Input image height
+// /* Input image Dimensions */#define WIDTH 1920  // Maximum Input image width
+// #define HEIGHT 1080 // Maximum Input image height
 
-// static constexpr int WIDTH = 1920;
-// static constexpr int HEIGHT = 1080;
+static constexpr int WIDTH = 1920;
+static constexpr int HEIGHT = 1080;
 
 /* Output image Dimensions */
 #define NEWWIDTH 720  // Maximum output image width
