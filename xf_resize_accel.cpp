@@ -16,20 +16,12 @@
 
 #include "xf_resize_config.h"
 
-static constexpr int WIDTH_A = 8;
-static constexpr int IBITS_A = 8;
-static constexpr int WIDTH_B = 8;
-static constexpr int IBITS_B = 4; // so B is 8-bit wide and 4-bits are integer bits
-static constexpr int WIDTH_OUT = 8;
-static constexpr int IBITS_OUT = 8;
-
 static constexpr int __XF_DEPTH = (HEIGHT * WIDTH * (XF_PIXELWIDTH(TYPE, NPC_T)) / 8) / (INPUT_PTR_WIDTH / 8);
 static constexpr int __XF_DEPTH_OUT =
     (HEIGHT * WIDTH * (XF_PIXELWIDTH(TYPE, NPC_T)) / 8) / (OUTPUT_PTR_WIDTH / 8);
 
 void resize_accel(ap_uint<INPUT_PTR_WIDTH>* img_inp,
                   ap_uint<OUTPUT_PTR_WIDTH>* img_out,
-                  float params[2 * XF_CHANNELS(TYPE, NPC_T)],
                   int rows_in,
                   int cols_in,
                   int rows_out,
