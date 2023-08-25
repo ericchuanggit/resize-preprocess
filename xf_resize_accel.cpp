@@ -42,7 +42,7 @@ void resize_accel(ap_uint<INPUT_PTR_WIDTH>* img_inp,
 
     xf::cv::Mat<TYPE, NEWHEIGHT, NEWWIDTH, NPC_T, XF_CV_DEPTH_OUT> resize_out_mat(rows_out, cols_out);
 
-    xf::cv::Mat<TYPE, NEWHEIGHT, NEWWIDTH, NPC_T, XF_CV_DEPTH_OUT> out_mat(rows_in, cols_in);
+    xf::cv::Mat<TYPE, NEWHEIGHT, NEWWIDTH, NPC_T, XF_CV_DEPTH_OUT> out_mat(rows_out, rows_out);
 
 // clang-format off
     #pragma HLS DATAFLOW
