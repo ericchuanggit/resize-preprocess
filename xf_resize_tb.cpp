@@ -18,8 +18,7 @@
 #include "xf_resize_config.h"
 
 int main(int argc, char** argv) {
-    cv::Mat img, out_img, result_ocv, error;
-    
+    cv::Mat img, out_img, result_ocv, normalized_ocv, error;
 
     if (argc != 2) {
         fprintf(stderr, "Usage: <executable> <input image>\n");
@@ -35,15 +34,11 @@ int main(int argc, char** argv) {
     img.create(cv::Size(WIDTH, HEIGHT), CV_8UC3);
     result_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
     out_img.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
+    normalized_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
     error.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
 #endif
-
-#if GRAY
-    // reading in the color image
-    img = cv::imread(argv[1], 0);
-#else
+    // Reading in the color image
     img = cv::imread(argv[1], 1);
-#endif
 
     if (!img.data) {
         return -1;
@@ -59,9 +54,10 @@ int main(int argc, char** argv) {
     out_height = NEWHEIGHT;
     out_width = NEWWIDTH;
 
-    float normalization[6] = {0,0,0,1,1,1};
-/*OpenCV resize function*/
+    float normalization[6] = {0, 0, 0, 1/254, 1/254, 1/254};
 
+    // OpenCV resize function
+    
 #if INTERPOLATION == 0
     cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_NEAREST);
 #endif
@@ -72,15 +68,20 @@ int main(int argc, char** argv) {
     cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_AREA);
 #endif
 
-    /* Call the top function */
+    // OpenCV normalization function using cv::normalize
+    cv::normalize(result_ocv, normalized_ocv, 0, 1, cv::NORM_MINMAX, CV_8U);
+
+    // Call the top function
     resize_accel((ap_uint<INPUT_PTR_WIDTH>*)img.data, (ap_uint<OUTPUT_PTR_WIDTH>*)out_img.data, in_height, in_width,
                  out_height, out_width, normalization);
 
     float err_per;
-    cv::absdiff(result_ocv, out_img, error);
+    cv::absdiff(normalized_ocv, out_img, error);
     xf::cv::analyzeDiff(error, 5, err_per);
+
     cv::imwrite("hls_out.png", out_img);
     cv::imwrite("resize_ocv.png", result_ocv);
+    cv::imwrite("normalized_ocv.png", normalized_ocv); // Save normalized image
     cv::imwrite("error.png", error);
 
     if (err_per > 0.0f) {
