@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
         fprintf(stderr, "Usage: <executable> <input image>\n");
         return -1;
     }
-
+/*   Opencv image size          */
 #if GRAY
     img.create(cv::Size(WIDTH, HEIGHT), CV_8UC1);
     out_img.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
@@ -37,13 +37,16 @@ int main(int argc, char** argv) {
     normalized_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
     error.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
 #endif
-    // Reading in the color image
+/*   Reading mode in the color image   */
+#if GRAY
+    img = cv::imread(argv[1], 0);
+#else
     img = cv::imread(argv[1], 1);
-
+#endif
     if (!img.data) {
         return -1;
     }
-
+/*   Writing the color image  into .png */
     cv::imwrite("input.png", img);
 
     unsigned short in_width, in_height;
@@ -54,10 +57,9 @@ int main(int argc, char** argv) {
     out_height = NEWHEIGHT;
     out_width = NEWWIDTH;
 
-    float normalization[6] = {0, 0, 0, 1/254, 1/254, 1/254};
+ /*   OpenCV function             */
 
-    // OpenCV resize function
-    
+ /*   resize                      */   
 #if INTERPOLATION == 0
     cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_NEAREST);
 #endif
@@ -68,13 +70,22 @@ int main(int argc, char** argv) {
     cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_AREA);
 #endif
 
-    // OpenCV normalization function using cv::normalize
-    cv::normalize(result_ocv, normalized_ocv, 0, 1, cv::NORM_MINMAX, CV_8U);
+/*   normalization                */
+    // cv::normalize(result_ocv, normalized_ocv, 0, 1, cv::NORM_MINMAX, CV_8U);
+    std::vector<cv::Mat> channels;
+    cv::split(result_ocv, channels); 
+    channels[0] = channels[0]/2; //red
+    cv::merge(channels,normalized_ocv);
+    // std::cout << "ocv_R_arry:" << normalized_ocv<< std::endl;
 
-    // Call the top function
+
+
+/*   Call HLS function   */
+    float normalization[6] = {0, 0, 0, 0.5, 1, 1};
     resize_accel((ap_uint<INPUT_PTR_WIDTH>*)img.data, (ap_uint<OUTPUT_PTR_WIDTH>*)out_img.data, in_height, in_width,
                  out_height, out_width, normalization);
 
+/*   HLS & OPENCV difference error*/
     float err_per;
     cv::absdiff(normalized_ocv, out_img, error);
     xf::cv::analyzeDiff(error, 5, err_per);
