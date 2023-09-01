@@ -18,7 +18,7 @@
 #include "xf_resize_config.h"
 /**********************************************Beta_Blue / 2************************************************************************************************/
 #if Beta_r
-int beta_r(int argc, char** argv){
+int beta_b(int argc, char** argv){
     cv::Mat img, out_img, result_ocv, normalized_ocv, error;
 
     if (argc != 2) {
