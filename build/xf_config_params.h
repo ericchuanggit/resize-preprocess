@@ -55,3 +55,11 @@
 #define IBITS_B 4 // so B is 8-bit wide and 4-bits are integer bits
 #define WIDTH_OUT 8
 #define IBITS_OUT 8
+
+//test RGB/Alpha/Beta
+#define Beta_r 1
+#define Beta_g 1
+#define Beta_b 1
+#define Alpha_r 1
+#define Alpha_g 1
+#define Alpha_b 1
