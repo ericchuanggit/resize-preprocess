@@ -2,3 +2,4 @@ settings.tcl
 *.log
 resize.prj
 .vscode
+eric_histogram.py

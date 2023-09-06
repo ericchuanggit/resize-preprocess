@@ -486,11 +486,11 @@ int alpha_r(int argc, char** argv){
     result_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
     error.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
 #else
-    img.create(cv::Size(WIDTH, HEIGHT), CV_8UC3);
-    result_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    out_img.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    normalized_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    error.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
+    img.create(cv::Size(WIDTH, HEIGHT), CV_32FC3);
+    result_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_32FC3);
+    out_img.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_32FC3);
+    normalized_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_32FC3);
+    error.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_32FC3);
 #endif
 /*   Reading mode in the color image   */
 #if GRAY
@@ -511,6 +511,10 @@ int alpha_r(int argc, char** argv){
     in_height = img.rows;
     out_height = NEWHEIGHT;
     out_width = NEWWIDTH;
+    std::cout << "Mat_img type: " << img.type() << std::endl;
+    std::cout << "Mat_hls_out type: " << out_img.type() << std::endl;
+    std::cout << "Mat ocv_out type: " << result_ocv.type() << std::endl;
+    std::cout << "Mat normalize_ocv type: " << normalized_ocv.type() << std::endl;
 
  /*   OpenCV Function             */
  /*   Resize                      */   
@@ -563,12 +567,13 @@ int alpha_r(int argc, char** argv){
 #endif
 /**********************************************main*********************************************************************************************************/
 int main(int argc, char** argv){
-    beta_b(argc, argv);
-    beta_g(argc, argv);
-    beta_r(argc, argv);
-    alpha_b(argc, argv);
-    alpha_g(argc, argv);
+    // beta_b(argc, argv);
+    // beta_g(argc, argv);
+    // beta_r(argc, argv);
+    // alpha_b(argc, argv);
+    // alpha_g(argc, argv);
     alpha_r(argc, argv);
+
     return 0;
 
 }
