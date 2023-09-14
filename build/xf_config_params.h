@@ -57,9 +57,10 @@
 #define IBITS_OUT 8
 
 //test RGB/Alpha/Beta
-#define Beta_r 1
-#define Beta_g 1
-#define Beta_b 1
-#define Alpha_r 1
-#define Alpha_g 1
-#define Alpha_b 1
+#define Beta_r 0
+#define Beta_g 0
+#define Beta_b 0
+#define Alpha_r 0
+#define Alpha_g 0
+#define Alpha_b 0
+#define Alpha_bgr 1

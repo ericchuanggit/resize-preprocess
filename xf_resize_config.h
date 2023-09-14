@@ -22,11 +22,8 @@
 #include "common/xf_common.hpp"
 #include "imgproc/xf_resize.hpp"
 #include "common/xf_utility.hpp"
-#include "dnn/xf_preprocess.hpp"
+#include "dnn/xf_preprocess.hpp" //normalize
 #include "xf_config_params.h"
-
-
-#include "dnn/xf_preprocess.hpp"
 
 /* Interface types*/
 #if RO

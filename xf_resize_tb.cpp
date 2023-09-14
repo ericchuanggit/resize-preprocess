@@ -16,139 +16,41 @@
 
 #include "common/xf_headers.hpp"
 #include "xf_resize_config.h"
-/**********************************************Beta_Blue / 2************************************************************************************************/
-#if Beta_r
-int beta_b(int argc, char** argv){
-    cv::Mat img, out_img, result_ocv, normalized_ocv, error;
+#include <bitset>
+#include <stdio.h>
+using namespace std;
 
-    if (argc != 2) {
-        fprintf(stderr, "Usage: <executable> <input image>\n");
-        return -1;
-    }
-/*   Opencv image size  */
-#if GRAY
-    img.create(cv::Size(WIDTH, HEIGHT), CV_8UC1);
-    out_img.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-    result_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-    error.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-#else
-    img.create(cv::Size(WIDTH, HEIGHT), CV_8UC3);
-    result_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    out_img.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    normalized_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    error.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-#endif
-/*   Reading mode in the color image   */
-#if GRAY
-    img = cv::imread(argv[1], 0);
-#else
-    img = cv::imread(argv[1], 1);
-#endif
-    if (!img.data) {
-        return -1;
-    }
-/*   Writing the color image  into ".png" */
-    cv::imwrite("input.png", img);
+unsigned short in_width, in_height;
+unsigned short out_width, out_height;
 
-    unsigned short in_width, in_height;
-    unsigned short out_width, out_height;
+/****diff error****/
+int diff(cv::Mat img_ocv, cv::Mat img_hls, const string& testcase){
+    cv::Mat error;
+    error.create(cv::Size(out_width, out_height), CV_8UC3);
 
-    in_width = img.cols;
-    in_height = img.rows;
-    out_height = NEWHEIGHT;
-    out_width = NEWWIDTH;
-
- /*   OpenCV Function             */
-
- /*   Resize                      */   
-#if INTERPOLATION == 0
-    cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_NEAREST);
-#endif
-#if INTERPOLATION == 1
-    cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_LINEAR);
-#endif
-#if INTERPOLATION == 2
-    cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_AREA);
-#endif
-
-/*   Normalization                */
-    // cv::normalize(result_ocv, normalized_ocv, 0, 1, cv::NORM_MINMAX, CV_8U);
-    std::vector<cv::Mat> channels;
-    cv::split(result_ocv, channels); 
-    channels[0] = channels[0]/2; //red
-    cv::merge(channels,normalized_ocv);
-    // std::cout << "ocv_R_arry:" << normalized_ocv<< std::endl;
-
-/*   Call HLS Function   */
-    float normalization[6] = {0, 0, 0, 0.5, 1, 1};
-    resize_accel((ap_uint<INPUT_PTR_WIDTH>*)img.data, (ap_uint<OUTPUT_PTR_WIDTH>*)out_img.data, in_height, in_width,
-                 out_height, out_width, normalization);
-
-/*   HLS & OPENCV difference error */
     float err_per;
-    cv::absdiff(normalized_ocv, out_img, error);
+    cv::absdiff(img_ocv, img_hls, error);
     xf::cv::analyzeDiff(error, 5, err_per);
-
-    cv::imwrite("hls_bb_out.png", out_img);
-    cv::imwrite("resize_ocv.png", result_ocv);
-    cv::imwrite("normalized_bb_ocv.png", normalized_ocv); // Save normalized image
-    cv::imwrite("error.png", error);
+    cv::imwrite(testcase + "_" + "img_ocv.bmp", img_ocv);
+    cv::imwrite(testcase + "_" + "img_hls.bmp", img_hls);
+    cv::imwrite(testcase + "_" + "error.bmp", error);
 
     if (err_per > 0.0f) {
-        fprintf(stderr, "ERROR: Beta Blue Test Failed.\n ");
+        // fprintf(stderr, "ERROR:" testcase + "_" + "Test Failed.\n");
+        std::cerr << "ERROR:" << testcase << "_" << "test failed." << std::endl;
         return -1;
     }
     else{
-        fprintf(stdout, "Success:Beta Blue Test matched.\n" );
+        // fprintf(stdout, "Success:" testcase + "_" +  "Test matched.\n" );
+        std::cout << "Success:" << testcase << "_" << "test matched." << std::endl;
     }
-
     return 0;
 }
-#endif
-/**********************************************Beta_Green/2*************************************************************************************************/
-#if Beta_g
-int beta_g(int argc, char** argv){
-    cv::Mat img, out_img, result_ocv, normalized_ocv, error;
-
-    if (argc != 2) {
-        fprintf(stderr, "Usage: <executable> <input image>\n");
-        return -1;
-    }
-/*   Opencv image size  */
-#if GRAY
-    img.create(cv::Size(WIDTH, HEIGHT), CV_8UC1);
-    out_img.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-    result_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-    error.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-#else
-    img.create(cv::Size(WIDTH, HEIGHT), CV_8UC3);
-    result_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    out_img.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    normalized_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    error.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-#endif
-/*   Reading mode in the color image   */
-#if GRAY
-    img = cv::imread(argv[1], 0);
-#else
-    img = cv::imread(argv[1], 1);
-#endif
-    if (!img.data) {
-        return -1;
-    }
-/*   Writing the color image  into ".png" */
-    cv::imwrite("input.png", img);
-
-    unsigned short in_width, in_height;
-    unsigned short out_width, out_height;
-
-    in_width = img.cols;
-    in_height = img.rows;
-    out_height = NEWHEIGHT;
-    out_width = NEWWIDTH;
-
- /* OpenCV Function */
- /*   Resize        */   
+/***resize ***/
+int t_resize(cv::Mat img){
+    cv::Mat result_ocv, result_hls;
+    result_ocv.create(cv::Size(out_width, out_height), CV_8UC3);
+    result_hls.create(cv::Size(out_width, out_height), CV_8UC3);
 #if INTERPOLATION == 0
     cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_NEAREST);
 #endif
@@ -159,421 +61,110 @@ int beta_g(int argc, char** argv){
     cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_AREA);
 #endif
 
-/*   Normalization   */
-    // cv::normalize(result_ocv, normalized_ocv, 0, 1, cv::NORM_MINMAX, CV_8U);
-    std::vector<cv::Mat> channels;
-    cv::split(result_ocv, channels); 
-    channels[1] = channels[1]/2; //green
-    cv::merge(channels,normalized_ocv);
-    // std::cout << "ocv_R_arry:" << normalized_ocv<< std::endl;
+    float normalization[6] = {0, 0, 0, 1, 1, 1}; // resize only
 
-
-
-/*   Call HLS Function   */
-    float normalization[6] = {0, 0, 0, 1, 0.5, 1};
-    resize_accel((ap_uint<INPUT_PTR_WIDTH>*)img.data, (ap_uint<OUTPUT_PTR_WIDTH>*)out_img.data, in_height, in_width,
+    resize_accel((ap_uint<INPUT_PTR_WIDTH>*)img.data, (ap_uint<OUTPUT_PTR_WIDTH>*)result_hls.data, in_height, in_width,
                  out_height, out_width, normalization);
 
-/*   HLS & OPENCV difference error */
-    float err_per;
-    cv::absdiff(normalized_ocv, out_img, error);
-    xf::cv::analyzeDiff(error, 5, err_per);
+    return diff(result_ocv,result_hls,"resize");
+}
+/****alpha****/
+int t_alpha(cv::Mat img){
+    float alpha_value = 50;
+    cv::Mat normalized_ocv, result_hls;
+    normalized_ocv.create(cv::Size(out_width, out_height), CV_8UC3);
+    result_hls.create(cv::Size(out_width, out_height), CV_8UC3);
 
-    cv::imwrite("hls_bg_out.png", out_img);
-    cv::imwrite("resize_ocv.png", result_ocv);
-    cv::imwrite("normalized_bg_ocv.png", normalized_ocv); // Save normalized image
-    cv::imwrite("error.png", error);
-
-    if (err_per > 0.0f) {
-        fprintf(stderr, "ERROR: Beta Green Test Failed.\n ");
-        return -1;
-    }
-    else{
-        fprintf(stdout, "Success:Beta Green Test matched.\n" );
-    }
+    float hls_resize[6] = {0, 0, 0, 1, 1, 1}; // resize only
     
-
-    // return beta_r(argc, argv);
-    return 0;
-}
-#endif
-/**********************************************Beta_Red/2***************************************************************************************************/
-#if Beta_r
-int beta_r(int argc, char** argv){
-    cv::Mat img, out_img, result_ocv, normalized_ocv, error;
-
-    if (argc != 2) {
-        fprintf(stderr, "Usage: <executable> <input image>\n");
-        return -1;
-    }
-/*   Opencv image size  */
-#if GRAY
-    img.create(cv::Size(WIDTH, HEIGHT), CV_8UC1);
-    out_img.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-    result_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-    error.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-#else
-    img.create(cv::Size(WIDTH, HEIGHT), CV_8UC3);
-    result_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    out_img.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    normalized_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    error.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-#endif
-/*   Reading mode in the color image   */
-#if GRAY
-    img = cv::imread(argv[1], 0);
-#else
-    img = cv::imread(argv[1], 1);
-#endif
-    if (!img.data) {
-        return -1;
-    }
-/*   Writing the color image into ".png"  */
-    cv::imwrite("input.png", img);
-
-    unsigned short in_width, in_height;
-    unsigned short out_width, out_height;
-
-    in_width = img.cols;
-    in_height = img.rows;
-    out_height = NEWHEIGHT;
-    out_width = NEWWIDTH;
-
- /*   OpenCV Function             */
- /*   Resize                      */   
-#if INTERPOLATION == 0
-    cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_NEAREST);
-#endif
-#if INTERPOLATION == 1
-    cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_LINEAR);
-#endif
-#if INTERPOLATION == 2
-    cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_AREA);
-#endif
-
-/*   Normalization                */
-    // cv::normalize(result_ocv, normalized_ocv, 0, 1, cv::NORM_MINMAX, CV_8U);
+    resize_accel((ap_uint<INPUT_PTR_WIDTH>*)img.data, (ap_uint<OUTPUT_PTR_WIDTH>*)result_hls.data, in_height, in_width,
+                 out_height, out_width, hls_resize);
+    
+    //opencv
     std::vector<cv::Mat> channels;
-    cv::split(result_ocv, channels); 
-    channels[2] = channels[2]/2; //red
+    cv::split(result_hls, channels);
+    for(int i=0; i<3; i++){
+        for (int row = 0; row < channels[i].rows; row++) {
+            for (int col = 0; col < channels[i].cols; col++) {
+                uchar pixel = channels[i].at<uchar>(row, col);
+
+                if (pixel < alpha_value) {
+                    channels[i].at<uchar>(row, col) = abs(int(pixel - alpha_value));
+                    channels[i].at<uchar>(row, col) = ~channels[i].at<uchar>(row, col) + 1;
+                } else {
+                    channels[i].at<uchar>(row, col) = pixel - alpha_value;
+                }
+            }
+        } 
+    }
     cv::merge(channels,normalized_ocv);
-    // std::cout << "ocv_R_arry:" << normalized_ocv<< std::endl;
 
+    //hls
+    float normalization[6] = {alpha_value, alpha_value, alpha_value, 1, 1, 1};
 
-
-/*   Call HLS Function   */
-    float normalization[6] = {0, 0, 0, 1, 1, 0.5};
-    resize_accel((ap_uint<INPUT_PTR_WIDTH>*)img.data, (ap_uint<OUTPUT_PTR_WIDTH>*)out_img.data, in_height, in_width,
+    resize_accel((ap_uint<INPUT_PTR_WIDTH>*)img.data, (ap_uint<OUTPUT_PTR_WIDTH>*)result_hls.data, in_height, in_width,
                  out_height, out_width, normalization);
-
-/*   HLS & OPENCV difference error */
-    float err_per;
-    cv::absdiff(normalized_ocv, out_img, error);
-    xf::cv::analyzeDiff(error, 5, err_per);
-
-    cv::imwrite("hls_br_out.png", out_img);
-    cv::imwrite("resize_ocv.png", result_ocv);
-    cv::imwrite("normalized_br_ocv.png", normalized_ocv); // Save normalized image
-    cv::imwrite("error.png", error);
-
-    if (err_per > 0.0f) {
-        fprintf(stderr, "ERROR: Beta Red Test Failed.\n ");
-        return -1;
-    }
-    else{
-        fprintf(stdout, "Success:Beta Red Test matched.\n" );
-    }
-
-    // return beta_g(argc, argv);
-    return 0;
+    //diff
+    return diff(normalized_ocv,result_hls,"alpha");
 }
-#endif
-/**********************************************Alpha_Blue -50***********************************************************************************************/
-#if Alpha_b
-int alpha_b(int argc, char** argv){
-    cv::Mat img, out_img, result_ocv, normalized_ocv, error;
+/****beta****/
+int t_beta(cv::Mat img){
+    cv::Mat normalized_ocv, result_hls;
+    normalized_ocv.create(cv::Size(out_width, out_height), CV_8UC3);
+    result_hls.create(cv::Size(out_width, out_height), CV_8UC3);
 
-    if (argc != 2) {
-        fprintf(stderr, "Usage: <executable> <input image>\n");
-        return -1;
-    }
-/*   Opencv image size  */
-#if GRAY
-    img.create(cv::Size(WIDTH, HEIGHT), CV_8UC1);
-    out_img.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-    result_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-    error.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-#else
-    img.create(cv::Size(WIDTH, HEIGHT), CV_8UC3);
-    result_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    out_img.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    normalized_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    error.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-#endif
-/*   Reading mode in the color image   */
-#if GRAY
-    img = cv::imread(argv[1], 0);
-#else
-    img = cv::imread(argv[1], 1);
-#endif
-    if (!img.data) {
-        return -1;
-    }
-/*   Writing the color image into ".png" */
-    cv::imwrite("input.png", img);
+    float hls_resize[6] = {0, 0, 0, 1, 1, 1}; // resize only
+    
+    resize_accel((ap_uint<INPUT_PTR_WIDTH>*)img.data, (ap_uint<OUTPUT_PTR_WIDTH>*)result_hls.data, in_height, in_width,
+                 out_height, out_width, hls_resize);
 
-    unsigned short in_width, in_height;
-    unsigned short out_width, out_height;
-
-    in_width = img.cols;
-    in_height = img.rows;
-    out_height = NEWHEIGHT;
-    out_width = NEWWIDTH;
-
- /*   OpenCV Function             */
- /*   Resize                      */   
-#if INTERPOLATION == 0
-    cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_NEAREST);
-#endif
-#if INTERPOLATION == 1
-    cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_LINEAR);
-#endif
-#if INTERPOLATION == 2
-    cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_AREA);
-#endif
-
-/*   Normalization                */
-    // cv::normalize(result_ocv, normalized_ocv, 0, 1, cv::NORM_MINMAX, CV_8U);
+    //opencv
+    float beta_value = 0.5;
     std::vector<cv::Mat> channels;
-    cv::split(result_ocv, channels); 
-    channels[0] = channels[0]- 50; //blue
+    cv::split(result_hls, channels);
+    for(int i=0; i<3; i++){
+        channels[i] = channels[i]*beta_value;
+    }
     cv::merge(channels,normalized_ocv);
-    // std::cout << "ocv_R_arry:" << normalized_ocv<< std::endl;
 
+    //hls
+    float normalization[6] = {0, 0, 0, beta_value, beta_value, beta_value};
 
-
-/*   Call HLS Function   */
-    float normalization[6] = {50, 0, 0, 1, 1, 1};
-    resize_accel((ap_uint<INPUT_PTR_WIDTH>*)img.data, (ap_uint<OUTPUT_PTR_WIDTH>*)out_img.data, in_height, in_width,
+    resize_accel((ap_uint<INPUT_PTR_WIDTH>*)img.data, (ap_uint<OUTPUT_PTR_WIDTH>*)result_hls.data, in_height, in_width,
                  out_height, out_width, normalization);
+    //diff
+    return diff(normalized_ocv,result_hls,"beta");
 
-/*   HLS & OPENCV difference error */
-    float err_per;
-    cv::absdiff(normalized_ocv, out_img, error);
-    xf::cv::analyzeDiff(error, 5, err_per);
-
-    cv::imwrite("hls_ab_out.png", out_img);
-    cv::imwrite("resize_ocv.png", result_ocv);
-    cv::imwrite("normalized_ab_ocv.png", normalized_ocv); // Save normalized image
-    cv::imwrite("error.png", error);
-
-    if (err_per > 0.0f) {
-        fprintf(stderr, "ERROR: Alpha Blue Test Failed.\n ");
-        return -1;
-    }
-    else{
-        fprintf(stdout, "Success:Alpha Blue Test matched.\n" );
-    }
-
-    // return beta_b(argc, argv);
-    return 0;
 }
-#endif
-/**********************************************Alpha_Green-50***********************************************************************************************/
-#if Alpha_g
-int alpha_g(int argc, char** argv){
-    cv::Mat img, out_img, result_ocv, normalized_ocv, error;
 
-    if (argc != 2) {
-        fprintf(stderr, "Usage: <executable> <input image>\n");
-        return -1;
-    }
-/*   Opencv image size  */
-#if GRAY
-    img.create(cv::Size(WIDTH, HEIGHT), CV_8UC1);
-    out_img.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-    result_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-    error.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-#else
-    img.create(cv::Size(WIDTH, HEIGHT), CV_8UC3);
-    result_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    out_img.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    normalized_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-    error.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC3);
-#endif
-/*   Reading mode in the color image   */
-#if GRAY
-    img = cv::imread(argv[1], 0);
-#else
-    img = cv::imread(argv[1], 1);
-#endif
-    if (!img.data) {
-        return -1;
-    }
-/*   Writing the color image into ".png" */
-    cv::imwrite("input.png", img);
-
-    unsigned short in_width, in_height;
-    unsigned short out_width, out_height;
-
-    in_width = img.cols;
-    in_height = img.rows;
-    out_height = NEWHEIGHT;
-    out_width = NEWWIDTH;
-
- /*   OpenCV Function             */
- /*   Resize                      */   
-#if INTERPOLATION == 0
-    cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_NEAREST);
-#endif
-#if INTERPOLATION == 1
-    cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_LINEAR);
-#endif
-#if INTERPOLATION == 2
-    cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_AREA);
-#endif
-
-/*   Normalization                */
-    // cv::normalize(result_ocv, normalized_ocv, 0, 1, cv::NORM_MINMAX, CV_8U);
-    std::vector<cv::Mat> channels;
-    cv::split(result_ocv, channels); 
-    channels[1] = channels[1]- 50; //green
-    cv::merge(channels,normalized_ocv);
-    // std::cout << "ocv_R_arry:" << normalized_ocv<< std::endl;
-
-
-
-/*   Call HLS Function   */
-    float normalization[6] = {0, 50, 0, 1, 1, 1};
-    resize_accel((ap_uint<INPUT_PTR_WIDTH>*)img.data, (ap_uint<OUTPUT_PTR_WIDTH>*)out_img.data, in_height, in_width,
-                 out_height, out_width, normalization);
-
-/*   HLS & OPENCV difference error */
-    float err_per;
-    cv::absdiff(normalized_ocv, out_img, error);
-    xf::cv::analyzeDiff(error, 5, err_per);
-
-    cv::imwrite("hls_ag_out.png", out_img);
-    cv::imwrite("resize_ocv.png", result_ocv);
-    cv::imwrite("normalized_ag_ocv.png", normalized_ocv); // Save normalized image
-    cv::imwrite("error.png", error);
-
-    if (err_per > 0.0f) {
-        fprintf(stderr, "ERROR: Alpha Green Test Failed.\n ");
-        return -1;
-    }
-    else{
-        fprintf(stdout, "Success:Alpha Green Test matched.\n" );
-    }
-
-    // return alpha_r(argc, argv);
-    return 0;
-}
-#endif
-/**********************************************Alpha_Red-100************************************************************************************************/
-#if Alpha_r
-int alpha_r(int argc, char** argv){
-    cv::Mat img, out_img, result_ocv, normalized_ocv, error;
-
-    if (argc != 2) {
-        fprintf(stderr, "Usage: <executable> <input image>\n");
-        return -1;
-    }
-/*   Opencv image size  */
-#if GRAY
-    img.create(cv::Size(WIDTH, HEIGHT), CV_8UC1);
-    out_img.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-    result_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-    error.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_8UC1);
-#else
-    img.create(cv::Size(WIDTH, HEIGHT), CV_32FC3);
-    result_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_32FC3);
-    out_img.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_32FC3);
-    normalized_ocv.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_32FC3);
-    error.create(cv::Size(NEWWIDTH, NEWHEIGHT), CV_32FC3);
-#endif
-/*   Reading mode in the color image   */
-#if GRAY
-    img = cv::imread(argv[1], 0);
-#else
-    img = cv::imread(argv[1], 1);
-#endif
-    if (!img.data) {
-        return -1;
-    }
-/*   Writing the color image into ".png" */
-    cv::imwrite("input.png", img);
-
-    unsigned short in_width, in_height;
-    unsigned short out_width, out_height;
-
-    in_width = img.cols;
-    in_height = img.rows;
-    out_height = NEWHEIGHT;
-    out_width = NEWWIDTH;
-    std::cout << "Mat_img type: " << img.type() << std::endl;
-    std::cout << "Mat_hls_out type: " << out_img.type() << std::endl;
-    std::cout << "Mat ocv_out type: " << result_ocv.type() << std::endl;
-    std::cout << "Mat normalize_ocv type: " << normalized_ocv.type() << std::endl;
-
- /*   OpenCV Function             */
- /*   Resize                      */   
-#if INTERPOLATION == 0
-    cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_NEAREST);
-#endif
-#if INTERPOLATION == 1
-    cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_LINEAR);
-#endif
-#if INTERPOLATION == 2
-    cv::resize(img, result_ocv, cv::Size(out_width, out_height), 0, 0, cv::INTER_AREyA);
-#endif
-
-/*   Normalization  */
-    // cv::normalize(result_ocv, normalized_ocv, 0, 1, cv::NORM_MINMAX, CV_8U);
-    std::vector<cv::Mat> channels;
-    cv::split(result_ocv, channels); 
-    channels[2] = channels[2]- 50; //Red
-    cv::merge(channels,normalized_ocv);
-    // std::cout << "ocv_R_arry:" << normalized_ocv<< std::endl;
-
-
-
-/*   Call HLS Function   */
-    float normalization[6] = {0, 0, 50, 1, 1, 1};
-    resize_accel((ap_uint<INPUT_PTR_WIDTH>*)img.data, (ap_uint<OUTPUT_PTR_WIDTH>*)out_img.data, in_height, in_width,
-                 out_height, out_width, normalization);
-
-/*   HLS & OPENCV difference error */
-    float err_per;
-    cv::absdiff(normalized_ocv, out_img, error);
-    xf::cv::analyzeDiff(error, 5, err_per);
-
-    cv::imwrite("hls_ar_out.png", out_img);
-    cv::imwrite("resize_ocv.png", result_ocv);
-    cv::imwrite("normalized_ar_ocv.png", normalized_ocv); // Save normalized image
-    cv::imwrite("error.png", error);
-
-    if (err_per > 0.0f) {
-        fprintf(stderr, "ERROR: Alpha Red Test Failed.\n ");
-        return -1;
-    }
-    else{
-        fprintf(stdout, "Success:Alpha Red Test matched.\n" );
-    }
-
-    // return alpha_g(argc, argv);
-    return 0;
-}
-#endif
-/**********************************************main*********************************************************************************************************/
 int main(int argc, char** argv){
-    // beta_b(argc, argv);
-    // beta_g(argc, argv);
-    // beta_r(argc, argv);
-    // alpha_b(argc, argv);
-    // alpha_g(argc, argv);
-    alpha_r(argc, argv);
+    cv::Mat img;
+
+    if (argc != 2) {
+        fprintf(stderr, "Usage: <executable> <input image>\n");
+        return -1;
+    }
+/*   Opencv image size  */
+    img.create(cv::Size(WIDTH, HEIGHT), CV_8UC3);
+    
+/*   Reading mode in the color image   */
+    img = cv::imread(argv[1], 1);
+
+    if (!img.data) {
+        return -1;
+    }
+/*   Writing the color image into ".png" */
+    cv::imwrite("input.png", img);
+
+    in_width = img.cols;
+    in_height = img.rows;
+    out_height = NEWHEIGHT;
+    out_width = NEWWIDTH;
+
+/*   Writing the color image into ".png" */
+    t_resize(img);
+    t_alpha(img);
+    t_beta(img);
 
     return 0;
-
 }
