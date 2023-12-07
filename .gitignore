@@ -1,4 +1,4 @@
 settings.tcl
-.log
+*.log
 resize.prj
 .vscode
