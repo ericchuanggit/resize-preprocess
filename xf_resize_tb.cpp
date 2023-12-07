@@ -31,9 +31,9 @@ int diff(cv::Mat img_ocv, cv::Mat img_hls, const string& testcase){
     float err_per;
     cv::absdiff(img_ocv, img_hls, error);
     xf::cv::analyzeDiff(error, 5, err_per);
-    cv::imwrite(testcase + "_" + "img_ocv.bmp", img_ocv);
-    cv::imwrite(testcase + "_" + "img_hls.bmp", img_hls);
-    cv::imwrite(testcase + "_" + "error.bmp", error);
+    cv::imwrite(testcase + "_" + "img_ocv.png", img_ocv);
+    cv::imwrite(testcase + "_" + "img_hls.png", img_hls);
+    cv::imwrite(testcase + "_" + "error.png", error);
 
     if (err_per > 0.0f) {
         // fprintf(stderr, "ERROR:" testcase + "_" + "Test Failed.\n");
